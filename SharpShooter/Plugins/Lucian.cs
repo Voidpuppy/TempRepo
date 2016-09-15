@@ -318,7 +318,7 @@ namespace SharpShooter.Plugins
                                                             _qExtended.Width);
                                                     var prediction = _qExtended.GetPrediction(extendedTarget);
                                                     if (box.IsInside(prediction.UnitPosition))
-                                                        if (prediction.Hitchance >= _q.MinHitChance)
+                                                        if (prediction.Hitchance >= HitChance.VeryHigh)
                                                         {
                                                             _q.CastOnUnit(minion);
                                                             break;
