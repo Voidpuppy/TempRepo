@@ -137,7 +137,7 @@ namespace SharpShooter.Plugins
                                         HeroManager.Enemies.Any(
                                             x =>
                                                 HealthPrediction.GetHealthPrediction(x, 250) > 0 &&
-                                                x.IsKillableAndValidTarget(_e.GetDamage(x),
+                                                x.IsKillableAndValidTarget(_e.GetDamage(x) - 30,
                                                     TargetSelector.DamageType.Physical, _e.Range)))
                                         _e.Cast();
 
@@ -279,7 +279,7 @@ namespace SharpShooter.Plugins
                             HeroManager.Enemies.Any(
                                 x =>
                                     HealthPrediction.GetHealthPrediction(x, 250) > 0 &&
-                                    x.IsKillableAndValidTarget(_e.GetDamage(x), TargetSelector.DamageType.Physical,
+                                    x.IsKillableAndValidTarget(_e.GetDamage(x) - 30, TargetSelector.DamageType.Physical,
                                         _e.Range)))
                             _e.Cast();
 
