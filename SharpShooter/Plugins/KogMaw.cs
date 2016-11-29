@@ -13,8 +13,6 @@ namespace SharpShooter.Plugins
         private readonly Spell _e;
         private readonly Spell _r;
 
-        private bool IsZombie = ObjectManager.Player.HasBuff("kogmawicathiansurprise");
-
         public KogMaw()
         {
             _q = new Spell(SpellSlot.Q, 950f) { MinHitChance = HitChance.High };
@@ -226,7 +224,7 @@ namespace SharpShooter.Plugins
         {
             if (!args.Unit.IsMe) return;
 
-            if (IsZombie)
+            if (ObjectManager.Player.HasBuff("kogmawicathiansurprise"))
                 args.Process = false;
 
             switch (MenuProvider.Orbwalker.ActiveMode)
