@@ -72,13 +72,12 @@ namespace SharpShooter.Plugins
                 "<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">MissFortune</font> Loaded.");
         }
 
-        private bool UsingR = ObjectManager.Player.HasBuff(RBuffName);
 
         private void Game_OnUpdate(EventArgs args)
         {
             if (!ObjectManager.Player.IsDead)
             {
-                if (Orbwalking.CanMove(100) && !UsingR)
+                if (Orbwalking.CanMove(100) && !ObjectManager.Player.HasBuff(RBuffName))
                 {
                     switch (MenuProvider.Orbwalker.ActiveMode)
                     {
@@ -205,7 +204,7 @@ namespace SharpShooter.Plugins
                 {
                     if (!_pressed)
                     {
-                        if (UsingR)
+                        if (ObjectManager.Player.HasBuff(RBuffName))
                         {
                             _iWantToCancelR = true;
                             ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
@@ -320,7 +319,7 @@ namespace SharpShooter.Plugins
             {
                 if (MenuProvider.Champion.Misc.GetBoolValue("Block Movement order While Using R"))
                 {
-                    if (UsingR)
+                    if (ObjectManager.Player.HasBuff(RBuffName))
                     {
                         if (!_iWantToCancelR)
                         {
@@ -390,7 +389,7 @@ namespace SharpShooter.Plugins
                     }
                 }
 
-                if (UsingR)
+                if (ObjectManager.Player.HasBuff(RBuffName))
                 {
                     var playerPos = Drawing.WorldToScreen(ObjectManager.Player.Position);
                     Drawing.DrawText(playerPos.X, playerPos.Y - 20, drawRKillable.Color,
