@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-using SPrediction;
 
 namespace SharpShooter.Plugins
 {
@@ -13,7 +12,8 @@ namespace SharpShooter.Plugins
         private readonly Spell _w;
         private readonly Spell _e;
         private readonly Spell _r;
-        private bool IsZombie => ObjectManager.Player.HasBuff("kogmawicathiansurprise");
+
+        private bool IsZombie = ObjectManager.Player.HasBuff("kogmawicathiansurprise");
 
         public KogMaw()
         {
@@ -87,7 +87,7 @@ namespace SharpShooter.Plugins
                                     {
                                         var target = TargetSelector.GetTargetNoCollision(_q);
                                         if (target != null)
-                                            _q.SPredictionCast(target, _q.MinHitChance);
+                                            _q.Cast(target);
                                     }
 
                             if (MenuProvider.Champion.Combo.UseW)
@@ -117,7 +117,7 @@ namespace SharpShooter.Plugins
                                         {
                                             var target = TargetSelector.GetTarget(_r.Range, _r.DamageType);
                                             if (target != null)
-                                                _r.SPredictionCast(target, _r.MinHitChance);
+                                                _r.Cast(target);
                                         }
                                         else
                                         {
@@ -128,7 +128,7 @@ namespace SharpShooter.Plugins
                                                             TargetSelector.DamageType.Magical, _r.Range) &&
                                                         _r.GetPrediction(x).Hitchance >= _r.MinHitChance);
                                             if (killableTarget != null)
-                                                _r.SPredictionCast(killableTarget, _r.MinHitChance);
+                                                _r.Cast(killableTarget);
                                         }
                                     }
 
@@ -142,7 +142,7 @@ namespace SharpShooter.Plugins
                                     {
                                         var target = TargetSelector.GetTargetNoCollision(_q);
                                         if (target != null)
-                                            _q.SPredictionCast(target, _q.MinHitChance);
+                                            _q.Cast(target);
                                     }
 
                             if (MenuProvider.Champion.Harass.UseE)

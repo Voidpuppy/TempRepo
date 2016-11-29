@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-using SPrediction;
 
 namespace SharpShooter.Plugins
 {
@@ -16,7 +15,7 @@ namespace SharpShooter.Plugins
 
         public Ezreal()
         {
-            _q = new Spell(SpellSlot.Q, 1150f, TargetSelector.DamageType.Physical) {MinHitChance = HitChance.High};
+            _q = new Spell(SpellSlot.Q, 1150f) {MinHitChance = HitChance.High};
             _w = new Spell(SpellSlot.W, 1000f, TargetSelector.DamageType.Magical) {MinHitChance = HitChance.High};
             _e = new Spell(SpellSlot.E, 475f, TargetSelector.DamageType.Magical);
             _r = new Spell(SpellSlot.R, 3000f, TargetSelector.DamageType.Magical) {MinHitChance = HitChance.High};
@@ -76,7 +75,7 @@ namespace SharpShooter.Plugins
                                 {
                                     var target = TargetSelector.GetTarget(_q.Range, _q.DamageType);
                                     if (target.IsValidTarget(_q.Range))
-                                        _q.SPredictionCast(target, _q.MinHitChance);
+                                        _q.Cast(target);
                                 }
 
                             if (MenuProvider.Champion.Combo.UseW)
@@ -85,10 +84,7 @@ namespace SharpShooter.Plugins
                                     var target = TargetSelector.GetTarget(_w.Range, _w.DamageType);
                                     if (target != null)
                                     {
-                                        if (ConfigMenu.SelectedPrediction.SelectedIndex == 0)
-                                            _w.SPredictionCast(target, _w.MinHitChance);
-                                        else
-                                            _w.Cast(target, false, true);
+                                        _w.Cast(target, false, true);
                                     }
                                 }
 
@@ -117,7 +113,7 @@ namespace SharpShooter.Plugins
                                     {
                                         var target = TargetSelector.GetTarget(_q.Range, _q.DamageType);
                                         if (target.IsValidTarget(_q.Range))
-                                            _q.SPredictionCast(target, _q.MinHitChance);
+                                            _q.Cast(target);
                                     }
 
                             if (MenuProvider.Champion.Harass.UseW)

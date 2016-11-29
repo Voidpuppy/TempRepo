@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-using SPrediction;
 
 namespace SharpShooter.Plugins
 {
@@ -72,9 +71,6 @@ namespace SharpShooter.Plugins
                                     var target = TargetSelector.GetTarget(_q.Range, _q.DamageType);
                                     if (target != null)
                                     {
-                                        if (ConfigMenu.SelectedPrediction.SelectedIndex == 0)
-                                            _q.SPredictionCast(target, HitChance.High);
-                                        else
                                             _q.Cast(target, false, true);
                                     }
                                 }
@@ -92,7 +88,7 @@ namespace SharpShooter.Plugins
                                 {
                                     var target = TargetSelector.GetTargetNoCollision(_r);
                                     if (target != null)
-                                        _r.SPredictionCast(target, _r.MinHitChance);
+                                        _r.Cast(target);
                                 }
                             break;
                         }
@@ -105,9 +101,6 @@ namespace SharpShooter.Plugins
                                         var target = TargetSelector.GetTarget(_q.Range, _q.DamageType);
                                         if (target != null)
                                         {
-                                            if (ConfigMenu.SelectedPrediction.SelectedIndex == 0)
-                                                _q.SPredictionCast(target, HitChance.High);
-                                            else
                                                 _q.Cast(target, false, true);
                                         }
                                     }
@@ -120,7 +113,7 @@ namespace SharpShooter.Plugins
                                         {
                                             var target = TargetSelector.GetTargetNoCollision(_r);
                                             if (target != null)
-                                                _r.SPredictionCast(target, _r.MinHitChance);
+                                                _r.Cast(target);
                                         }
                             break;
                         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-using SPrediction;
 using SharpDX;
 using Collision = LeagueSharp.Common.Collision;
 using Color = System.Drawing.Color;
@@ -118,9 +117,6 @@ namespace SharpShooter.Plugins
                                             var target = TargetSelector.GetTarget(_q.Range, _q.DamageType);
                                             if (target != null)
                                             {
-                                                if (ConfigMenu.SelectedPrediction.SelectedIndex == 0)
-                                                    _q.SPredictionCast(target, HitChance.High);
-                                                else
                                                     _q.Cast(target, false, true);
                                             }
                                         }

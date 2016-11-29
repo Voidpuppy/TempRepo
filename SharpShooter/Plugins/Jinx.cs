@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
-using SPrediction;
 using SharpDX;
 using Collision = LeagueSharp.Common.Collision;
 using Color = System.Drawing.Color;
@@ -135,7 +134,7 @@ namespace SharpShooter.Plugins
                                     {
                                         var target = TargetSelector.GetTargetNoCollision(_w);
                                         if (target.IsValidTarget(_w.Range))
-                                            _w.SPredictionCast(target, _w.MinHitChance);
+                                            _w.Cast(target);
                                     }
 
                             if (MenuProvider.Champion.Combo.UseE)
@@ -223,7 +222,7 @@ namespace SharpShooter.Plugins
                                         {
                                             var target = TargetSelector.GetTargetNoCollision(_w);
                                             if (target.IsValidTarget(_w.Range))
-                                                _w.SPredictionCast(target, _w.MinHitChance);
+                                                _w.Cast(target);
                                         }
 
                             break;

@@ -125,7 +125,7 @@ namespace SharpShooter.Plugins
                 "<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">Lulu</font> Loaded.");
         }
 
-        private GameObject MyPix => ObjectManager.Player.Pet;
+        private GameObject MyPix = ObjectManager.Player.Pet;
 
         private void Game_OnUpdate(EventArgs args)
         {

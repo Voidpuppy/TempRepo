@@ -72,7 +72,7 @@ namespace SharpShooter.Plugins
                 "<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">MissFortune</font> Loaded.");
         }
 
-        private bool UsingR => ObjectManager.Player.HasBuff(RBuffName);
+        private bool UsingR = ObjectManager.Player.HasBuff(RBuffName);
 
         private void Game_OnUpdate(EventArgs args)
         {
@@ -469,7 +469,7 @@ namespace SharpShooter.Plugins
                         var targetServerPosition = target.ServerPosition;
                         var time = ObjectManager.Player.ServerPosition.Distance(target.ServerPosition) / _q.Speed +
                                    _q.Delay;
-                        var predic = Prediction.GetPrediction(longRangeTarget, time);
+                        var predic = LeagueSharp.Common.Prediction.GetPrediction(longRangeTarget, time);
 
                         var cone40 = new Geometry.Polygon.Sector(targetServerPosition, direction, 40f * radian, 450f);
 

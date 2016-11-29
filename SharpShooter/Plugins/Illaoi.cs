@@ -111,7 +111,7 @@ namespace SharpShooter.Plugins
                                         x =>
                                             x.IsValidTarget(_r.Range) &&
                                             ObjectManager.Player.ServerPosition.Distance(
-                                                Prediction.GetPrediction(x, 0.5f).UnitPosition) < _r.Range) >=
+                                                LeagueSharp.Common.Prediction.GetPrediction(x, 0.5f).UnitPosition) < _r.Range) >=
                                     MenuProvider.Champion.Combo.GetSliderValue("Use R if Will Hit >=").Value)
                                 {
                                     _r.Cast();

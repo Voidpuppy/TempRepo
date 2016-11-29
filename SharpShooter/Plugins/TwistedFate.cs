@@ -11,7 +11,7 @@ namespace SharpShooter.Plugins
         private Cards _cardiNeed = Cards.None;
         private readonly SpellSlot _flash;
         private readonly Spell _q;
-        private readonly Spell _w;
+        private static Spell _w;
         private Spell _e;
         private readonly Spell _r;
 
@@ -78,7 +78,7 @@ namespace SharpShooter.Plugins
                 "<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">Twisted Fate</font> Loaded.");
         }
 
-        private bool Picking => _w.IsReadyPerfectly() && _w.Instance.Name != "PickACard";
+        private static bool Picking = _w.IsReadyPerfectly() && _w.Instance.Name != "PickACard";
 
         private void Game_OnUpdate(EventArgs args)
         {
@@ -402,8 +402,6 @@ namespace SharpShooter.Plugins
                 {
                     Render.Circle.DrawCircle(ObjectManager.Player.Position, _r.Range,
                         MenuProvider.Champion.Drawings.DrawRrange.Color);
-                    Utility.DrawCircle(ObjectManager.Player.Position, _r.Range,
-                        MenuProvider.Champion.Drawings.DrawRrange.Color, 2, 30, true);
                 }
 
                 if (MenuProvider.Champion.Drawings.GetCircleValue("Draw Flash+AA Range").Active)

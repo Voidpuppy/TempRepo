@@ -199,6 +199,7 @@ namespace SharpShooter.Plugins
                     if (buff.IsValidBuff())
                         if (buff.EndTime - Game.Time >
                             buff.EndTime - buff.StartTime -
+                            // ReSharper disable once PossibleLossOfFraction
                             MenuProvider.Champion.Misc.GetSliderValue("Q Stealth duration (ms)").Value/1000)
                             if (!ObjectManager.Player.Position.UnderTurret(true))
                                 args.Process = false;
