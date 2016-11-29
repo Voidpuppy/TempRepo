@@ -78,7 +78,6 @@ namespace SharpShooter.Plugins
                 "<font color = \"#00D8FF\"><b>SharpShooter Reworked:</b></font> <font color = \"#FF007F\">Twisted Fate</font> Loaded.");
         }
 
-        private static bool Picking = _w.IsReadyPerfectly() && _w.Instance.Name != "PickACard";
 
         private void Game_OnUpdate(EventArgs args)
         {
@@ -283,7 +282,7 @@ namespace SharpShooter.Plugins
                 _cardiNeed = Cards.None;
             }
 
-            if (Picking)
+            if (_w.IsReadyPerfectly() && _w.Instance.Name != "PickACard")
             {
                 if (_cardiNeed != Cards.None)
                 {
@@ -300,7 +299,7 @@ namespace SharpShooter.Plugins
         {
             if (args.Unit.IsMe)
             {
-                if (Picking)
+                if (_w.IsReadyPerfectly() && _w.Instance.Name != "PickACard")
                 {
                     if (MenuProvider.Orbwalker.ActiveMode == Orbwalking.OrbwalkingMode.Combo)
                     {
@@ -462,7 +461,7 @@ namespace SharpShooter.Plugins
         {
             _cardiNeed = card;
 
-            if (!Picking)
+            if (!(_w.IsReadyPerfectly() && _w.Instance.Name != "PickACard"))
             {
                 if (_w.IsReadyPerfectly())
                 {

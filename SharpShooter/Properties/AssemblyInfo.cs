@@ -35,5 +35,5 @@ using System.Runtime.InteropServices;
 // 지정되도록 할 수 있습니다.
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("6.23.0.22")]
+[assembly: AssemblyVersion("6.23.0.23")]
 [assembly: AssemblyFileVersion("0.0.0.0")]
