@@ -12,8 +12,13 @@ namespace SharpShooter.Plugins
         private readonly SpellSlot _flash;
         private readonly Spell _q;
         private static Spell _w;
-        private Spell _e;
         private readonly Spell _r;
+
+        public static BuffType[] BuffTypes = new[]
+        {
+            BuffType.Slow, BuffType.AttackSpeedSlow, BuffType.Blind, BuffType.Charm, BuffType.Fear, BuffType.Knockback,
+            BuffType.Knockup, BuffType.Polymorph, BuffType.Stun, BuffType.Taunt, BuffType.Snare, BuffType.Silence
+        };
 
         public TwistedFate()
         {
@@ -21,7 +26,6 @@ namespace SharpShooter.Plugins
 
             _q = new Spell(SpellSlot.Q, 1450f, TargetSelector.DamageType.Magical) { MinHitChance = HitChance.VeryHigh };
             _w = new Spell(SpellSlot.W, 1200f, TargetSelector.DamageType.Magical);
-            _e = new Spell(SpellSlot.E);
             _r = new Spell(SpellSlot.R, 5500f);
 
             _q.SetSkillshot(0.25f, 40f, 1000f, false, SkillshotType.SkillshotLine);
@@ -43,7 +47,8 @@ namespace SharpShooter.Plugins
 
             MenuProvider.Champion.Harass.AddUseQ();
             MenuProvider.Champion.Harass.AddUseW();
-            MenuProvider.Champion.Harass.AddIfMana(60);
+            MenuProvider.Champion.Harass.AddUseRedCardHarass();
+            MenuProvider.Champion.Harass.AddIfMana();
 
             MenuProvider.Champion.Laneclear.AddUseQ();
             MenuProvider.Champion.Laneclear.AddUseW();
@@ -56,6 +61,7 @@ namespace SharpShooter.Plugins
             MenuProvider.Champion.Misc.AddUseKillsteal();
             MenuProvider.Champion.Misc.AddUseAntiGapcloser();
             MenuProvider.Champion.Misc.AddUseInterrupter();
+            MenuProvider.Champion.Misc.AddUseImmobileRedCard();
             MenuProvider.Champion.Misc.AddItem("Select Gold Card When Using Ultimate (gate)", true);
 
             MenuProvider.Champion.Drawings.AddDrawQrange(Color.FromArgb(100, Color.DeepSkyBlue), false);
@@ -109,7 +115,7 @@ namespace SharpShooter.Plugins
                                                         x =>
                                                             x.IsValidTarget(_q.Range) &&
                                                             _q.GetPrediction(x).Hitchance >= HitChance.Immobile)
-                                                        .OrderByDescending(x => TargetSelector.GetPriority(x))
+                                                        .OrderByDescending(TargetSelector.GetPriority)
                                                         .FirstOrDefault();
                                                 if (target != null)
                                                 {
@@ -126,9 +132,8 @@ namespace SharpShooter.Plugins
 
                                         if (target != null)
                                         {
-                                            if (MenuProvider.Champion.Combo.GetBoolValue("Use Blue Card if Mana is Low")
-                                                ? ObjectManager.Player.Mana - _w.ManaCost < _q.ManaCost + _w.ManaCost
-                                                : false)
+                                            if (MenuProvider.Champion.Combo.GetBoolValue("Use Blue Card if Mana is Low") && 
+                                                ObjectManager.Player.Mana - _w.ManaCost < _q.ManaCost + _w.ManaCost)
                                             {
                                                 PickACard(Cards.Blue);
                                             }
@@ -165,6 +170,25 @@ namespace SharpShooter.Plugins
                                                 PickACard(Cards.Blue);
                                             }
                                         }
+                                if (MenuProvider.Champion.Harass.UseRedCardToMinion)
+                                {
+                                    if (ObjectManager.Player.IsManaPercentOkay(MenuProvider.Champion.Harass.IfMana))
+                                    {
+                                        if (_w.IsReadyPerfectly())
+                                        {
+                                            var target = TargetSelector.GetTarget(_w.Range, _w.DamageType);
+                                            var redcardradius = 100;
+                                            var minion =
+                                                MinionManager.GetMinions(ObjectManager.Player.Position,
+                                                    ObjectManager.Player.AttackRange).FirstOrDefault();
+                                            if (minion != null && target != null && target.Distance(minion.Position) < redcardradius)
+                                            {
+                                                PickACard(Cards.Red);
+                                                MenuProvider.Orbwalker.ForceTarget(minion);
+                                            }
+                                        }
+                                    }
+                                }
                                 break;
                             }
                         case Orbwalking.OrbwalkingMode.LaneClear:
@@ -186,9 +210,9 @@ namespace SharpShooter.Plugins
                                     if (_w.IsReadyPerfectly())
                                     {
                                         var minioncount =
-                                            MinionManager.GetMinions(float.MaxValue)
-                                                .Where(x => Orbwalking.InAutoAttackRange(x))
-                                                .Count();
+                                            MinionManager
+                                                .GetMinions(float.MaxValue)
+                                                .Count(Orbwalking.InAutoAttackRange);
 
                                         if (ObjectManager.Player.IsManaPercentOkay(MenuProvider.Champion.Laneclear.IfMana))
                                         {
@@ -227,7 +251,7 @@ namespace SharpShooter.Plugins
                                     {
                                         var minionCount =
                                             MinionManager.GetMinions(600, MinionTypes.All, MinionTeam.Neutral,
-                                                MinionOrderTypes.MaxHealth).Count();
+                                                MinionOrderTypes.MaxHealth).Count;
 
                                         if (ObjectManager.Player.IsManaPercentOkay(MenuProvider.Champion.Jungleclear.IfMana))
                                         {
@@ -259,6 +283,27 @@ namespace SharpShooter.Plugins
                         {
                             _q.Cast(target, false, true);
                         }
+                    }
+                }
+
+                if (MenuProvider.Champion.Misc.UseImmobileRedCard)
+                {
+                    if (_w.IsReadyPerfectly())
+                    {
+                        foreach (var target in HeroManager.Enemies.Where(x=> x.IsValidTarget(ObjectManager.Player.AttackRange)))
+                        {
+                            foreach (var buff in target.Buffs.Where(x=> BuffTypes.Contains(x.Type)))
+                            {
+                                var ttime = ObjectManager.Player.Distance(target)/_w.Speed + _w.Delay;
+                                var duration = buff.EndTime - Game.Time;
+                                if (duration > ttime)
+                                {
+                                    PickACard(Cards.Red);
+                                    MenuProvider.Orbwalker.ForceTarget(target);
+                                }
+                            }
+                        }
+                        
                     }
                 }
 
@@ -411,7 +456,7 @@ namespace SharpShooter.Plugins
                     if (target != null && _flash != SpellSlot.Unknown && _flash.IsReady())
                     {
                         Render.Circle.DrawCircle(ObjectManager.Player.Position,
-                            Orbwalking.GetRealAutoAttackRange(null) + 65 + 400, Color.Gold, 5);
+                            Orbwalking.GetRealAutoAttackRange(null) + 65 + 400, Color.Gold);
 
                         if (!target.IsValidTarget(Orbwalking.GetRealAutoAttackRange(null) + 65))
                         {
@@ -425,7 +470,7 @@ namespace SharpShooter.Plugins
                     else
                     {
                         Render.Circle.DrawCircle(ObjectManager.Player.Position,
-                            Orbwalking.GetRealAutoAttackRange(null) + 65 + 400, Color.Gray, 5);
+                            Orbwalking.GetRealAutoAttackRange(null) + 65 + 400, Color.Gray);
                     }
                 }
             }
